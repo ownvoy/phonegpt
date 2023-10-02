@@ -1,48 +1,36 @@
 import os
 import openai
-from termcolor import colored
 import argparse
+import sys
+
 parser = argparse.ArgumentParser()
 # parser.add_argument('-q')
 
 path = os.getcwd()
-import sys
+
 print(sys.argv[2:])
-file_path = f'{path}/api.txt'
+file_path = f"{path}/api.txt"
 
-if os.path.exists(file_path):
+openai.api_key = "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"
+args = sys.argv[2:]
+# args = parser.parse_args()
+prompt = " ".join(args)
+print(prompt)
+# prompt = "넌 누가 만들었어"
 
+response = openai.ChatCompletion.create(
+    model="gpt-3.5-turbo",
+    messages=[{"role": "user", "content": prompt}],
+    temperature=0.3,
+)
+# generated_text = response.choices[0].text.strip()
+print(response["choices"][0])
+results = response["choices"][0]["message"]["content"]
+print("￦n")
+print("______________________")
 
-    file = open(file_path,'r')
-    data = file.read()
-    openai.api_key = data
-    file.close()
-    args=sys.argv[2:]
-    # args = parser.parse_args()
-    prompt = ' '.join(args)
-    print(prompt)
+# print(generated_text)
 
-    response = openai.Completion.create(
-    engine='text-davinci-003',  # Use 'text-davinci-003' for gpt-3.5-turbo model
-    prompt=prompt,
-    max_tokens= 500 )
-    # generated_text = response.choices[0].text.strip()
-    print(response["choices"][0])
-    results = response["choices"][0].text.strip()
-    print('￦n')
-    print('______________________')
-    
-    # print(generated_text)
-    
-    with open("result.txt","w") as file:
-        file.write(results)
-
-
-
-
-else:
-    with open("api.txt","w") as file:
-        file.write(input("Enter your api key: "))
-
-    file.close()
-
+# write txt file
+f = open("ChatGPT_termux/result.txt", "w")
+f.write(results)
